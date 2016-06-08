@@ -4,6 +4,7 @@
 #Include "Protheus.ch"
 #Include "Colors.ch"
 
+#Define _EXPIRA    "31/07/2016"
 #Define LTESTE	   .F.
 
 #Define PAPER_A4 	9 	//| Tamanho do Papel A4
@@ -56,8 +57,8 @@ User Function GlayMon()// Ferramenta para Desenvolver Relatorio Grafico
 	Private aValDef 	:= { "L", "0000", "0000", "0000", "0000", "PT", "00", SPACE(250), "N" }
 	Private oPrn		:= Nil
 
-	If DATE() > cTod("29/03/2016")
-		Iw_MsgBox("Desculpe. Vers„o Expirada !!! Entre em contato com cristianosm@gmail.com","AtenÁ„o","ALERT")
+	If DATE() > cTod(_EXPIRA)
+		Iw_MsgBox("Desculpe. Ver√£o Expirada !!! Entre em contato com cristianosm@gmail.com","Aten√ß√£o","ALERT")
 		Return()
 	EndIf
 	
@@ -68,7 +69,7 @@ Return()
 *******************************************************************************
 Static Function TelaPrincipal()//| Tela Principal
 *******************************************************************************
-	Local lCentered 	:= .T. //| lÛgico Indica se a janela ser· (.T.) ou n„o (.F.) centralizada. O padr„o È falso (.F.).
+	Local lCentered 	:= .T. //| l√≥gico Indica se a janela ser√° (.T.) ou n√£o (.F.) centralizada. O padr√£o √© falso (.F.).
 
 	Local oDlg 			:= Nil
 
@@ -97,8 +98,8 @@ Static Function TelaPrincipal()//| Tela Principal
 	Private  lBtEdtar		:= Nil
 	Private  lBtVisualizar	:= Nil
 	
-	cDesc1 	:= "Ferramenta criada com o intuito de auxiliar no desenvolvimento de relatÛrios "
-	cDesc2 	:= "Graficos. Permitindo de forma pr·tica, criar seu Layout Gr·fico para posteriormente "
+	cDesc1 	:= "Ferramenta criada com o intuito de auxiliar no desenvolvimento de relat√≥rios "
+	cDesc2 	:= "Graficos. Permitindo de forma pr√°tica, criar seu Layout Gr√°fico para posteriormente "
 	cDesc3 	:= "ser exportado no formato ADVPL e ser inserido no seu fonte efetivamente. "
 	
 	FAtuSBtm("I") //Atualiza o Status dos Botoes
@@ -116,22 +117,22 @@ Static Function TelaPrincipal()//| Tela Principal
 	cToolTip := "NOVO: Usado para criar do inicio um novo layout."
 	FButton(@oBtNovo		, 060, 015, "Novo"		, oDlg, {||FNovo()      }	, 050,,{||lBtNovo		}, cToolTip ) //| Cria Botao no Odlg
 
-	cToolTip := "IMPORTAR: Abre um arquivo layout salvo anteriormente, dando a opÁ„o de continuidade do desenvolvimento."
+	cToolTip := "IMPORTAR: Abre um arquivo layout salvo anteriormente, dando a op√ß√£o de continuidade do desenvolvimento."
 	FButton(@oBtImportar	, 060, 066, "Importar"	, oDlg, {||FImport()	}	, 050,,{||lBtImportar	}, cToolTip ) //| Cria Botao no Odlg
 
 	cToolTip := "SALVAR: Salva o layout em arquivo texto que pode ser posteriormente utilizado."
 	FButton(@oBtSalvar		, 060, 118, "Salvar"	, oDlg, {||FSalvar()   	}	, 050,,{||lBtSalvar		}, cToolTip ) //| Cria Botao no Odlg
 
-	cToolTip := "EXPORTAR: Exportar o layout criado para o fomato ADVPL. O bot„o sÛ È ativado apÛs o Visualizar."
+	cToolTip := "EXPORTAR: Exportar o layout criado para o fomato ADVPL. O bot√£o s√≥ √© ativado ap√≥s o Visualizar."
 	FButton(@oBtExportar	, 060, 170, "Exportar"	, oDlg, {||FExporta() 	}	, 050,,{||lBtExportar	}, cToolTip ) //| Cria Botao no Odlg
 
-	cToolTip := "PARAMETROS: Devemos aqui definir os parametros de impress„o que ser„o utilizadas no relatÛrio."
+	cToolTip := "PARAMETROS: Devemos aqui definir os parametros de impress√£o que ser√°o utilizadas no relat√≥rio."
 	FButton(@oBtParametros	, 090, 015, "Parametros", oDlg, {||FParametros()}	, 066,,{||lBtParametros	}, cToolTip ) //| Cria Botao no Odlg
 
-	cToolTip := "EDITAR: Usado para manipular o Layout. AlteraÁıes, Inclus„oes e exclusıes  de objetos no relatÛrio."
+	cToolTip := "EDITAR: Usado para manipular o Layout. Altera√ß√£es, Inclus√£oes e exclus√≥es  de objetos no relat√≥rio."
 	FButton(@oBtEdtar		, 090, 084, "Editar"	, oDlg, {||FEditar()	} 	, 067,,{||lBtEdtar		}, cToolTip ) //| Cria Botao no Odlg
 
-	cToolTip := "VISUALIZAR: Aqui podemos gerar o RelatÛrio e verificar o andamento do desenvolvimento."
+	cToolTip := "VISUALIZAR: Aqui podemos gerar o Relat√≥rio e verificar o andamento do desenvolvimento."
 	FButton(@oBtVisualizar	, 090, 154, "Visualizar", oDlg, {||FVisualizar()}	, 066,,{||lBtVisualizar	}, cToolTip ) //| Cria Botao no Odlg
 	
  	oFCred := TFont():New("Arial", ,12,,.F.,,,,,.F.)	//| Conteudo dos Campos
@@ -247,10 +248,10 @@ Return()
 Static Function FConfig(lConfig)//| Configura Pagina e Parametros de Impressao
 *******************************************************************************
 	//| Parametros FWMSPrinter()
-	Private cFilePrint		:= CriaTrab( ,.F. ) + ".pdf"//| Nome do arquivo de relatÛrio a ser criado.
-	Private lAdjustToLegacy	:= .T.						//| Se .T. recalcula as coordenadas para manter o legado de proporÁıes com a classe TMSPrinter. Default È .T.IMPORTANTE: Este c·lculos n„o funcionam corretamente quando houver ret‚ngulos do tipo BOX e FILLRECT no relatÛrio, podendo haver distorÁıes de algumas pixels o que acarretar· no encavalamento dos ret‚ngulos no momento da impress„o.
-	Private cPathInServer	:= "\system\pdf\"			//| DiretÛrio onde o arquivo de relatÛrio ser· salvo no Servidor
-	Private lDisableSetup	:= .T.						//| Se .T. n„o exibe a tela de Setup, ficando ‡ cargo do programador definir quando e se ser· feita sua chamada. Default È .F.
+	Private cFilePrint		:= CriaTrab( ,.F. ) + ".pdf"//| Nome do arquivo de relat√≥rio a ser criado.
+	Private lAdjustToLegacy	:= .T.						//| Se .T. recalcula as coordenadas para manter o legado de propor√ß√£es com a classe TMSPrinter. Default √© .T.IMPORTANTE: Este c√°lculos n√£o funcionam corretamente quando houver retangulos do tipo BOX e FILLRECT no relat√≥rio, podendo haver distor√ß√£es de algumas pixels o que acarretar√° no encavalamento dos retangulos no momento da impress√£o.
+	Private cPathInServer	:= "\system\pdf\"			//| Diret√≥rio onde o arquivo de relat√≥rio ser√° salvo no Servidor
+	Private lDisableSetup	:= .T.						//| Se .T. n√£o exibe a tela de Setup, ficando √© cargo do programador definir quando e se ser√° feita sua chamada. Default √© .F.
 	Private lTReport		:= .F.						//|
 	Private cPrinter		:=  ""
 	Private lServer			:= .F.
@@ -260,8 +261,8 @@ Static Function FConfig(lConfig)//| Configura Pagina e Parametros de Impressao
 	Private nQtdCopy		:= NIL
 	Private lSetView		:= .T.
 	
-	Private nDevice			:= Nil					//| Tipos de SaÌda aceitos: IMP_SPOOL Envia para impressora. IMP_PDF Gera arquivo PDF ‡ partir do relatÛrio.Default È IMP_SPOOL
-	Private cLocalPath		:= "C:\MP11\"				//| DiretÛrio onde o arquivo de relatÛrio ser· salvo no Cliente
+	Private nDevice			:= Nil					//| Tipos de Sa√≠da aceitos: IMP_SPOOL Envia para impressora. IMP_PDF Gera arquivo PDF √© partir do relat√≥rio.Default √© IMP_SPOOL
+	Private cLocalPath		:= "C:\MP11\"				//| Diret√≥rio onde o arquivo de relat√≥rio ser√° salvo no Cliente
 	Private nPaperSize		:= Nil
 	Private bSetPaperS  	:= {|| oPrn:SetPaperSize(nPaperSize) }
 	Private bOrientaPag 	:= {||  }
@@ -382,14 +383,14 @@ Return()
 *******************************************************************************
 Static Function FDLinha(oPrn) // Desenha Linha
 *******************************************************************************
-//| Par‚metros oPrn:Line()
+//| Parametros oPrn:Line()
  
-	nTop	:= Val(aLines[nL][LIN1])//| NumÈrico	Indica a coordenada vertical em pixels.	X
-	nLeft	:= Val(aLines[nL][COL1])//| NumÈrico	Indica a coordenada horizontal em pixels.	X
-	nBottom	:= Val(aLines[nL][LIN2])//| NumÈrico	Indica a posiÁ„o do objeto ao rodapÈ.	X
-	nRight	:= Val(aLines[nL][COL2])//| NumÈrico	Indica a posiÁ„o do objeto ‡ direita.	X
-	nColor	:= FNToC(aLines[nL][COR],"H") //nColor 				//| NumÈrico	Cor da linha. Default È 0
-	cPixel	:= aLines[nL][TAM]		//| Caracter	Expessura da linha em pixels. Default È "-2"
+	nTop	:= Val(aLines[nL][LIN1])//| Num√©rico	Indica a coordenada vertical em pixels.	X
+	nLeft	:= Val(aLines[nL][COL1])//| Num√©rico	Indica a coordenada horizontal em pixels.	X
+	nBottom	:= Val(aLines[nL][LIN2])//| Num√©rico	Indica a posi√ß√£o do objeto ao rodap√©.	X
+	nRight	:= Val(aLines[nL][COL2])//| Num√©rico	Indica a posi√ß√£o do objeto √© direita.	X
+	nColor	:= FNToC(aLines[nL][COR],"H") //nColor 				//| Num√©rico	Cor da linha. Default √© 0
+	cPixel	:= aLines[nL][TAM]		//| Caracter	Expessura da linha em pixels. Default √© "-2"
 
 	oPrn:Line( nTop, nLeft, nBottom, nRight, nColor, cPixel )
 	cExporta += "oPrn:Line( "+XC( nTop )+" , "+XC( nLeft )+" , "+XC( nBottom )+" , "+XC( nRight )+" , "+XC( nColor )+" , '" + XC( cPixel )+"'  )"  + _ENTER
@@ -398,13 +399,13 @@ Return()
 *******************************************************************************
 Static Function FDBox(oPrn) // Desenha Caixa
 *******************************************************************************
-//| Par‚metros oPrn:Box()
+//| Parametros oPrn:Box()
  
-	Local nRow		:= Val(aLines[nL][LIN1])	//|	NumÈrico	Indica a coordenada vertical em pixels.	X
-	Local nCol		:= Val(aLines[nL][COL1])	//|	NumÈrico	Indica a coordenada horizontal em pixels.	X
-	Local nBottom	:= Val(aLines[nL][LIN2])	//|	NumÈrico	Indica a posiÁ„o do objeto em relaÁ„o ao rodapÈ.	X
-	Local nRight	:= Val(aLines[nL][COL2]) 	//|	NumÈrico	Indica a posiÁ„o do objeto ‡ direita.	X
-	Local cPixel	:= aLines[nL][TAM]       	//|	Caracter	Expessura da linha em pixels. Default È "-2"
+	Local nRow		:= Val(aLines[nL][LIN1])	//|	Num√©rico	Indica a coordenada vertical em pixels.	X
+	Local nCol		:= Val(aLines[nL][COL1])	//|	Num√©rico	Indica a coordenada horizontal em pixels.	X
+	Local nBottom	:= Val(aLines[nL][LIN2])	//|	Num√©rico	Indica a posi√ß√£o do objeto em rela√ß√£o ao rodap√©.	X
+	Local nRight	:= Val(aLines[nL][COL2]) 	//|	Num√©rico	Indica a posi√ß√£o do objeto √© direita.	X
+	Local cPixel	:= aLines[nL][TAM]       	//|	Caracter	Expessura da linha em pixels. Default √© "-2"
  
 	oPrn:Box( nRow, nCol, nBottom, nRight, cPixel )
 	cExporta += "oPrn:Box( "+XC( nRow )+" , "+XC( nCol )+" , "+XC( nBottom )+" , "+XC( nRight )+" , '"+XC( cPixel )+"' )"  +_ENTER
@@ -415,8 +416,8 @@ Static Function FDRetangulo(oPrn) // Desenha Retangulo
 *******************************************************************************
 
 	Local aCoords	:= {} 	//| Vetor	Vetor de coordenadas {nTop,nLeft,nBottom,nRight}	X
-	Local oBrush	:= FNToC(aLines[nL][COR],"O") 	//| Objeto	Indica o objeto do tipo TBrush utilizado para definir a cor de preenchimento do shape e respons·vel pelo preenchimento do ret‚ngulo.
-	Local cPixel	:= aLines[nL][TAM] //| Caracter	Expessura da linha em pixels. Default È "-2"
+	Local oBrush	:= FNToC(aLines[nL][COR],"O") 	//| Objeto	Indica o objeto do tipo TBrush utilizado para definir a cor de preenchimento do shape e respons√≥vel pelo preenchimento do retAngulo.
+	Local cPixel	:= aLines[nL][TAM] //| Caracter	Expessura da linha em pixels. Default √© "-2"
 
 	aCoords := { Val(aLines[nL][LIN1]) , Val(aLines[nL][COL1]) , Val(aLines[nL][LIN2]) , Val(aLines[nL][COL2]) }
 	cCoords := "{ " +XC( Val(aLines[nL][LIN1]) )+","+XC( Val(aLines[nL][COL1]) )+","+XC( Val(aLines[nL][LIN2]) )+","+XC( Val(aLines[nL][COL2]) )+ " }"
@@ -428,14 +429,14 @@ Return()
 *******************************************************************************
 Static Function FDTexto(oPrn) // Desenha Texto
 *******************************************************************************
-//| Par‚metros oPrn:Say()
-	Local nRow		:= Val(aLines[nL][LIN1])	//| NumÈrico	Indica a coordenada vertical em pixels ou caracteres.	X
-	Local nCol		:= Val(aLines[nL][COL1])	//| NumÈrico	Indica a coordenada horizontal em pixels ou caracteres.	X
+//| Parametros oPrn:Say()
+	Local nRow		:= Val(aLines[nL][LIN1])	//| Num√©rico	Indica a coordenada vertical em pixels ou caracteres.	X
+	Local nCol		:= Val(aLines[nL][COL1])	//| Num√©rico	Indica a coordenada horizontal em pixels ou caracteres.	X
 	Local cText		:= aLines[nL][TEXTO]		//| Caracter	Texto a ser impresso.	X
-	Local oFont		:= Nil						//| Objeto		Indica o objeto do tipo TFont utilizado para definir as caracterÌsticas da fonte aplicada na exibiÁ„o do conte˙do do controle visual.
+	Local oFont		:= Nil						//| Objeto		Indica o objeto do tipo TFont utilizado para definir as caracteristicas da fonte aplicada na exibi√ß√£o do conte√∫do do controle visual.
 	Local nWidth	:= Nil						//| Nulo		Indica a largura em pixels do objeto.
-	Local nCorTxt	:= FNToC(aLines[nL][COR],"H")	//| NumÈrico	Indica a cor do texto do objeto.
-	Local nAngle	:= 0							//| NumÈrico	¬ngulo de rotaÁ„o do texto.
+	Local nCorTxt	:= FNToC(aLines[nL][COR],"H")	//| Num√©rico	Indica a cor do texto do objeto.
+	Local nAngle	:= 0							//| Num√©rico	Angulo de rota√ß√£o do texto.
 	Local nTamT		:= Val(aLines[nL][TAM]) * -1  	//| Numerico 	Tamanho do Texto...
 
 	//| Monta a Fonte...		
@@ -445,9 +446,9 @@ Static Function FDTexto(oPrn) // Desenha Texto
 	//| Formatacao do Texto
 	Do Case
 	Case aLines[nL][FORM] == "A" // Tudo
-		oFont:Bold†		:= .T.
+		oFont:Bold		:= .T.
 		oFont:Italic  	:= .T.
-		cExporta += "oFont:Bold†	:= .T. " + _ENTER
+		cExporta += "oFont:Bold	:= .T. " + _ENTER
 		cExporta += "oFont:Italic  	:= .T. " + _ENTER
 					
 	Case aLines[nL][FORM] == "I" // Italico
@@ -468,12 +469,12 @@ Return()
 Static Function FDImagem(oPrn) //| Desenha a Imagem...
 *******************************************************************************
  
-//| Par‚metros oPrn:SayBitmap()
-	Local nRow		:= Val(aLines[nL][LIN1]) 	//| NumÈrico	Indica a coordenada vertical em pixels ou caracteres.	X
-	Local nCol		:= Val(aLines[nL][COL1]) 	//| NumÈrico	Indica a coordenada horizontal em pixels ou caracteres.	X
-	Local cBitmap	:= aLines[nL][TEXTO] 		//| Caracter	Indica o diretÛrio e o nome, com extens„o BMP (Bitmap), da imagem.	X
-	Local nWidth	:= if(Val(aLines[nL][LIN2])>0,Val(aLines[nL][LIN2]),Nil)  	//| NumÈrico	Indica a largura em pixels do objeto. Default È 100.
-	Local nHeight	:= If(Val(aLines[nL][COL2])>0,Val(aLines[nL][COL2]),Nil)	//| NumÈrico	Indica a altura em pixels do objeto. Default È 100.
+//| Parametros oPrn:SayBitmap()
+	Local nRow		:= Val(aLines[nL][LIN1]) 	//| Num√©rico	Indica a coordenada vertical em pixels ou caracteres.	X
+	Local nCol		:= Val(aLines[nL][COL1]) 	//| Num√©rico	Indica a coordenada horizontal em pixels ou caracteres.	X
+	Local cBitmap	:= aLines[nL][TEXTO] 		//| Caracter	Indica o diret√≥rio e o nome, com extens√£o BMP (Bitmap), da imagem.	X
+	Local nWidth	:= if(Val(aLines[nL][LIN2])>0,Val(aLines[nL][LIN2]),Nil)  	//| Num√©rico	Indica a largura em pixels do objeto. Default √© 100.
+	Local nHeight	:= If(Val(aLines[nL][COL2])>0,Val(aLines[nL][COL2]),Nil)	//| Num√©rico	Indica a altura em pixels do objeto. Default √© 100.
 	//Alert(cBitmap)
 	
 	oPrn:SayBitmap( nRow , nCol , cBitmap , nWidth , nHeight )
@@ -484,11 +485,11 @@ Return()
 Static Function FWindows(oDlg, cCaption, nBottom, nRight, lTransparent) //| Monta o Objeto Window
 *******************************************************************************
 
-	nTop	 	:= 000		 //| NumÈrico	Indica a coordenada vertical superior em pixels ou caracteres.
-	nLeft	 	:= 000		 //| NumÈrico	Indica a coordenada horizontal esquerda em pixels ou caracteres.
-	nBottom	 	:= nBottom	 //| NumÈrico	Indica a coordenada vertical inferior em pixels ou caracteres.
-	nRight	 	:= nRight	 //| NumÈrico	Indica a coordenada horizontal direita em pixels ou caracteres.
-	cCaption 	:= cCaption  //| Caracter	Indica o tÌtulo da janela.
+	nTop	 	:= 000		 //| Num√©rico	Indica a coordenada vertical superior em pixels ou caracteres.
+	nLeft	 	:= 000		 //| Num√©rico	Indica a coordenada horizontal esquerda em pixels ou caracteres.
+	nBottom	 	:= nBottom	 //| Num√©rico	Indica a coordenada vertical inferior em pixels ou caracteres.
+	nRight	 	:= nRight	 //| Num√©rico	Indica a coordenada horizontal direita em pixels ou caracteres.
+	cCaption 	:= cCaption  //| Caracter	Indica o t√≠tulo da janela.
 	uParam6	 	:= Nil		 //| Qualquer	Compatibilidade.
 	uParam7	 	:= Nil		 //| Qualquer	Compatibilidade.
 	uParam8	 	:= Nil		 //| Qualquer	Compatibilidade.
@@ -496,14 +497,14 @@ Static Function FWindows(oDlg, cCaption, nBottom, nRight, lTransparent) //| Mont
 	nClrText 	:= CLR_BLACK //| Objeto		Indica a cor do texto.
 	nClrBack 	:= CLR_WHITE //| Qualquer	Indica a cor de fundo.
 	uParam12 	:= Nil 		 //| Qualquer	Compatibilidade.
-	oWnd 	 	:= Nil 		 //| Objeto	Indica a janela m„e (principal) da janela que ser· criada. O padr„o È a janela principal do programa.
-	lPixel 	 	:= Nil 		 //| lÛgico	Indica se considera as coordenadas passadas em pixels (.T.) ou caracteres (.F.).
+	oWnd 	 	:= Nil 		 //| Objeto	Indica a janela m√£e (principal) da janela que ser√° criada. O padr√£o √© a janela principal do programa.
+	lPixel 	 	:= Nil 		 //| l√≥gico	Indica se considera as coordenadas passadas em pixels (.T.) ou caracteres (.F.).
 	uParam15 	:= Nil		 //| Qualquer	Compatibilidade.
 	uParam16 	:= Nil		 //| Qualquer	Compatibilidade.
 	uParam17 	:= Nil		 //| Qualquer	Compatibilidade.
-	nWidth 	 	:= Nil		 //| numÈrico	Indica a largura da janela em pixels..
-	nHeight  	:= Nil		 //| numÈrico	Indica a altura da janela em pixels..
-	lTransparent:= lTransparent		 //| lÛgico	Se .T. permitira que a Dialog receba um fundo transparente..
+	nWidth 	 	:= Nil		 //| num√©rico	Indica a largura da janela em pixels..
+	nHeight  	:= Nil		 //| num√©rico	Indica a altura da janela em pixels..
+	lTransparent:= lTransparent		 //| l√≥gico	Se .T. permitira que a Dialog receba um fundo transparente..
 
 	Default nBottom  := 400
 	Default nRight 	 := 400
@@ -523,23 +524,23 @@ Return()
 *******************************************************************************
 Static Function FButton(oButton, nRow, nCol, cCaption, oDlg, bAction, nWidth, nHeight, bWhen, cToolTip) //| Monta Botao em Dialogo
 *******************************************************************************
-	Local nRow 		:= nRow 	//|numÈrico Indica a coordenada vertical em pixels ou caracteres.
-	Local nCol 		:= nCol 	//|numÈrico Indica a coordenada horizontal em pixels ou caracteres.
-	Local cCaption 	:= cCaption //|caractere Indica o tÌtulo do bot„o.
-	Local oDlg 		:= oDlg		//|objeto Indica a janela ou controle visual onde o bot„o ser· criado.
-	Local bAction 	:= bAction 	//|bloco de cÛdigo Indica o bloco de cÛdigo que ser· executado quando clicar, com o bot„o esquerdo do mouse, sobre o bot„o.
-	Local nWidth 	:= nWidth 	//|numÈrico Indica a largura em pixels do bot„o.
-	Local nHeight 	:= nHeight 	//|numÈrico Indica a altura em pixels do bot„o.
-	Local uP8 		:= Nil 		//|numÈrico Compatibilidade.
-	Local oFont 	:= Nil 		//|objeto Indica o objeto do tipo TFont utilizado para definir as caracterÌsticas da fonte aplicada na exibiÁ„o do conte˙do do controle visual.
-	Local uP10 		:= .F. 		//|lÛgico Compatibilidade.
-	Local lPixel 	:= .T. 		//| lÛgico Indica se considera as coordenadas passadas em pixels (.T.) ou caracteres (.F.).
-	Local uP12 		:= Nil 		//| lÛgico Compatibilidade.
-	Local uP13 		:= Nil 		//| lÛgico Compatibilidade.
-	Local uP14 		:= Nil 		//| lÛgico Compatibilidade.
-	Local bWhen 	:= bWhen	//| bloco de cÛdigo Indica o bloco de cÛdigo que ser· executado quando a mudanÁa de foco da entrada de dados, na janela em que o controle foi criado, estiver sendo efetuada. ObservaÁ„o: O bloco de cÛdigo retornar· verdadeiro (.T.), se o controle permanecer habilitado; caso contr·rio, retornar· falso (.F.).
-	Local uP16 		:= Nil 		//| bloco de cÛdigo Compatibilidade.
-	Local uP17 		:= .F. 		//| lÛgico Compatibilidade.
+	Local nRow 		:= nRow 	//|num√©rico Indica a coordenada vertical em pixels ou caracteres.
+	Local nCol 		:= nCol 	//|num√©rico Indica a coordenada horizontal em pixels ou caracteres.
+	Local cCaption 	:= cCaption //|caractere Indica o t√≠tulo do bot√£o.
+	Local oDlg 		:= oDlg		//|objeto Indica a janela ou controle visual onde o bot√£o ser√° criado.
+	Local bAction 	:= bAction 	//|bloco de c√≥digo Indica o bloco de c√≥digo que ser√° executado quando clicar, com o bot√£o esquerdo do mouse, sobre o bot√£o.
+	Local nWidth 	:= nWidth 	//|num√©rico Indica a largura em pixels do bot√£o.
+	Local nHeight 	:= nHeight 	//|num√©rico Indica a altura em pixels do bot√£o.
+	Local uP8 		:= Nil 		//|num√©rico Compatibilidade.
+	Local oFont 	:= Nil 		//|objeto Indica o objeto do tipo TFont utilizado para definir as caracteristicas da fonte aplicada na exibi√ß√£o do conte√∫do do controle visual.
+	Local uP10 		:= .F. 		//|l√≥gico Compatibilidade.
+	Local lPixel 	:= .T. 		//| l√≥gico Indica se considera as coordenadas passadas em pixels (.T.) ou caracteres (.F.).
+	Local uP12 		:= Nil 		//| l√≥gico Compatibilidade.
+	Local uP13 		:= Nil 		//| l√≥gico Compatibilidade.
+	Local uP14 		:= Nil 		//| l√≥gico Compatibilidade.
+	Local bWhen 	:= bWhen	//| bloco de c√≥digo Indica o bloco de c√≥digo que ser√° executado quando a mudan√ßa de foco da entrada de dados, na janela em que o controle foi criado, estiver sendo efetuada. Observa√ß√£o: O bloco de c√≥digo retornar verdadeiro (.T.), se o controle permanecer habilitado; caso contr√°rio, retornar falso (.F.).
+	Local uP16 		:= Nil 		//| bloco de c√≥digo Compatibilidade.
+	Local uP17 		:= .F. 		//| l√≥gico Compatibilidade.
 	Local cToolTip  := cToolTip
 
 	Default nWidth 	:= 040
@@ -554,16 +555,16 @@ Return()
 *******************************************************************************
 Static Function FGroup(oGroup,nTop,nLeft,nBottom,nRight,oDlg,cCaption )//| Monta Group em Dialogo
 *******************************************************************************
-	nTop 	 := nTop 		//| numÈrico Indica a coordenada vertical superior em pixels ou caracteres.
-	nLeft	 := nLeft		//| numÈrico Indica a coordenada horizontal ‡ esquerda em pixels ou caracteres.
-	nBottom  := nBottom 	//| numÈrico Indica a coordenada vertical inferior em pixels ou caracteres.
-	nRight   := nRight 		//| numÈrico Indica a coordenada horizontal ‡ direita em pixels ou caracteres.
-	cCaption := cCaption  	//| caractere Indica o tÌtulo do grupo.
-	oDlg	 := oDlg		//| objeto Indica a janela ou controle visual onde o objeto ser· criado.
-	nClrText := CLR_BLACK	//| numÈrico Indica a cor do texto.
-	nClrPane := CLR_WHITE	//| numÈrico Indica a cor de fundo.
-	lPixel	 := .T.  		//| lÛgico Indica se considera as coordenadas passadas em pixels (.T.) ou caracteres (.F.).
-	uP10 	 := .T. 		//| lÛgico Compatibilidade.
+	nTop 	 := nTop 		//| num√©rico Indica a coordenada vertical superior em pixels ou caracteres.
+	nLeft	 := nLeft		//| num√©rico Indica a coordenada horizontal √© esquerda em pixels ou caracteres.
+	nBottom  := nBottom 	//| num√©rico Indica a coordenada vertical inferior em pixels ou caracteres.
+	nRight   := nRight 		//| num√©rico Indica a coordenada horizontal √© direita em pixels ou caracteres.
+	cCaption := cCaption  	//| caractere Indica o t√≠tulo do grupo.
+	oDlg	 := oDlg		//| objeto Indica a janela ou controle visual onde o objeto ser√° criado.
+	nClrText := CLR_BLACK	//| num√©rico Indica a cor do texto.
+	nClrPane := CLR_WHITE	//| num√©rico Indica a cor de fundo.
+	lPixel	 := .T.  		//| l√≥gico Indica se considera as coordenadas passadas em pixels (.T.) ou caracteres (.F.).
+	uP10 	 := .T. 		//| l√≥gico Compatibilidade.
 
 	Default cCaption := ""
 
@@ -574,26 +575,26 @@ Return()
 Static Function FSay(oSay, nRow, nCol, cText, oDlg, cPicture, oFont, nClrText )//| Monta Texto em Dialogo
 *******************************************************************************
 
-	nRow 	:= nRow 		//| numÈrico Indica a coordenada vertical em pixels ou caracteres.
-	nCol 	:= nCol 		//| numÈrico Indica a coordenada horizontal em pixels ou caracteres.
-	bText 	:= {||cText} 	//| bloco de cÛdigo Indica o bloco de cÛdigo que ser· executado para retornar e apresentar uma string.
-	oDlg 	:= oDlg			//| objeto Indica a janela ou controle visual onde o objeto ser· criado.
-	cPicture:= cPicture 	//| caractere Indica a m·scara de formataÁ„o, do conte˙do, que ser· apresentada. Verificar Tabela de Pictures de FormataÁ„o.
-	oFont 	:= oFont 		//| objeto Indica o objeto do tipo TFont utilizado para definir as caracterÌsticas da fonte aplicada na exibiÁ„o do conte˙do do controle visual.
-	uP7 	:= Nil 			//| lÛgico Compatibilidade.
-	uP8 	:= Nil 			//| lÛgico  Compatibilidade.
-	uP9 	:= Nil 			//| lÛgico Compatibilidade.
-	lPixels := .T.			//| lÛgico Indica se considera as coordenadas passadas em pixels (.T.) ou caracteres (.F.).
-	nClrText:= nClrText		//| numÈrico Indica a cor do texto do objeto.
-	nClrBack:= CLR_WHITE	//| numÈrico Indica a cor de fundo do objeto.
-	nWidth 	:= 400			//| numÈrico Indica a largura em pixels do objeto.
-	nHeight := 020			//| numÈrico Indica a altura em pixels do objeto.
-	uP15 	:= Nil			//| lÛgico Compatibilidade.
-	uP16 	:= Nil			//| lÛgico Compatibilidade.
-	uP17 	:= Nil			//| lÛgico Compatibilidade.
-	uP18 	:= Nil			//| lÛgico Compatibilidade.
-	uP19 	:= Nil			//| lÛgico Compatibilidade.
-	lHtml 	:= Nil			//| lÛgico Indica se, verdadeiro (.T.), habilita a visualizaÁ„o do texto no formato HTML; caso contr·rio, falso (.F.).
+	nRow 	:= nRow 		//| num√©rico Indica a coordenada vertical em pixels ou caracteres.
+	nCol 	:= nCol 		//| num√©rico Indica a coordenada horizontal em pixels ou caracteres.
+	bText 	:= {||cText} 	//| bloco de c√≥digo Indica o bloco de c√≥digo que ser√° executado para retornar e apresentar uma string.
+	oDlg 	:= oDlg			//| objeto Indica a janela ou controle visual onde o objeto ser√° criado.
+	cPicture:= cPicture 	//| caractere Indica a mascara de formata√ß√£o, do conte√∫do, que ser√° apresentada. Verificar Tabela de Pictures de Formata√ß√£o.
+	oFont 	:= oFont 		//| objeto Indica o objeto do tipo TFont utilizado para definir as caracteristicas da fonte aplicada na exibi√ß√£o do conte√∫do do controle visual.
+	uP7 	:= Nil 			//| l√≥gico Compatibilidade.
+	uP8 	:= Nil 			//| l√≥gico  Compatibilidade.
+	uP9 	:= Nil 			//| l√≥gico Compatibilidade.
+	lPixels := .T.			//| l√≥gico Indica se considera as coordenadas passadas em pixels (.T.) ou caracteres (.F.).
+	nClrText:= nClrText		//| num√©rico Indica a cor do texto do objeto.
+	nClrBack:= CLR_WHITE	//| num√©rico Indica a cor de fundo do objeto.
+	nWidth 	:= 400			//| num√©rico Indica a largura em pixels do objeto.
+	nHeight := 020			//| num√©rico Indica a altura em pixels do objeto.
+	uP15 	:= Nil			//| l√≥gico Compatibilidade.
+	uP16 	:= Nil			//| l√≥gico Compatibilidade.
+	uP17 	:= Nil			//| l√≥gico Compatibilidade.
+	uP18 	:= Nil			//| l√≥gico Compatibilidade.
+	uP19 	:= Nil			//| l√≥gico Compatibilidade.
+	lHtml 	:= Nil			//| l√≥gico Indica se, verdadeiro (.T.), habilita a visualiza√ß√£o do texto no formato HTML; caso contr√°rio, falso (.F.).
 
 	Default cPicture := ""
 	Default oFont 	 := Nil
@@ -605,33 +606,33 @@ Return()
 *******************************************************************************
 Static Function FMultG(oTMultGet,cTxtMG,oDlgT,nWidth,nHeight, bWhen)
 *******************************************************************************
-	nRow		:= 001 		//| NumÈrico	Indica a coordenada vertical em pixels ou caracteres.
-	nCol		:= 001 		//| NumÈrico	Indica a coordenada horizontal em pixels ou caracteres.
-	bSetGet		:= {|u|if(Pcount()>0,cTxtMG:=u,cTxtMG)} //| Bloco de cÛdigo	Indica o bloco de cÛdigo, no formato {|u| if( Pcount( )>0, := u, ) }, que ser· executado para atualizar a vari·vel (essa vari·vel deve ser do tipo caracter). Desta forma, se a lista for sequencial, o controle atualizar· com o conte˙do do item selecionado, se for indexada, ser· atualizada com o valor do Ìndice do item selecionado.
-	oWnd		:= oDlgT 	//| Objeto	Indica a janela ou controle visual onde o objeto ser· criado.
-	nWidth		:= nWidth 	//| NumÈrico	Indica a largura em pixels do objeto.
-	nHeight		:= nHeight 	//| NumÈrico	Indica a altura em pixels do objeto.
-	oFont		:= 	TFont():New( 'Courier new' , , 20, , .T.) //| Objeto	Indica o objeto do tipo TFont utilizado para definir as caracterÌsticas da fonte aplicada na exibiÁ„o do conte˙do do controle visual.
-	lHScroll	:= .F. //| LÛgico	Indica se habilita(.T.)/desabilita (.F.) a barra de rolagem horizontal.
-	uP09		:= Nil //| NumÈrico	Compatibilidade
-	uP10		:= Nil //| NumÈrico	Compatibilidade
+	nRow		:= 001 		//| Num√©rico	Indica a coordenada vertical em pixels ou caracteres.
+	nCol		:= 001 		//| Num√©rico	Indica a coordenada horizontal em pixels ou caracteres.
+	bSetGet		:= {|u|if(Pcount()>0,cTxtMG:=u,cTxtMG)} //| Bloco de c√≥digo	Indica o bloco de c√≥digo, no formato {|u| if( Pcount( )>0, := u, ) }, que ser√° executado para atualizar a vari√°vel (essa vari√°vel deve ser do tipo caracter). Desta forma, se a lista for sequencial, o controle atualizar com o conte√∫do do item selecionado, se for indexada, ser√° atualizada com o valor do √≠ndice do item selecionado.
+	oWnd		:= oDlgT 	//| Objeto	Indica a janela ou controle visual onde o objeto ser√° criado.
+	nWidth		:= nWidth 	//| Num√©rico	Indica a largura em pixels do objeto.
+	nHeight		:= nHeight 	//| Num√©rico	Indica a altura em pixels do objeto.
+	oFont		:= 	TFont():New( 'Courier new' , , 20, , .T.) //| Objeto	Indica o objeto do tipo TFont utilizado para definir as caracteristicas da fonte aplicada na exibi√ß√£o do conte√∫do do controle visual.
+	lHScroll	:= .F. //| l√≥gico	Indica se habilita(.T.)/desabilita (.F.) a barra de rolagem horizontal.
+	uP09		:= Nil //| Num√©rico	Compatibilidade
+	uP10		:= Nil //| Num√©rico	Compatibilidade
 	uP11		:= Nil //| Objeto	Compatibilidade.
-	lPixel		:= .T. //| LÛgico	Indica se considera as coordenadas passadas em pixels (.T.) ou caracteres (.F.).
+	lPixel		:= .T. //| l√≥gico	Indica se considera as coordenadas passadas em pixels (.T.) ou caracteres (.F.).
 	uP13		:= Nil //| Caracter	Compatibilidade.
-	uP14		:= Nil //| LÛgico	Compatibilidade.
-	bWhen		:= bWhen  //| Bloco de cÛdigo	Indica o bloco de cÛdigo que ser· executado quando a mudanÁa de foco da entrada de dados, na janela em que o controle foi criado, estiver sendo efetuada. ObservaÁ„o: O bloco de cÛdigo retornar· verdadeiro (.T.) se o controle permanecer habilitado; caso contr·rio, retornar· falso (.F.).
-	uP16		:= Nil //| LÛgico	Compatibilidade.
-	uP17		:= Nil //| LÛgico	Compatibilidade.
-	lReadOnly	:= .F. //| LÛgico	Indica se o conte˙do da vari·vel associada ao objeto permanecer· apenas para leitura.
-	bValid		:= {||} //| Bloco de cÛdigo	Indica o bloco de cÛdigo de validaÁ„o que ser· executado quando o conte˙do do objeto for modificado. Retorna verdadeiro (.T.), se o conte˙do È v·lido; caso contr·rio, falso (.F.).
-	uP20		:= {||}  //| Bloco de cÛdigo	Compatibilidade.
-	uP21		:= Nil //| LÛgico	Compatibilidade.
-	lNoBorder	:= .T. //| LÛgico	Indica se habilita(.T.)/desabilita(.F.) a apresentaÁ„o da borda no objeto.
-	lVScroll	:= .T. //| LÛgico	Indica se habilita(.T.)/desabilita(.F.) a barra de rolagem vertical. Obs.: O valor default È Desabilitado.
-	cLabelText	:= "" //| Caractere	indica o texto que ser· apresentado na Label.
-	nLabelPos	:= 1 //| NumÈrico	Indica a posiÁ„o da label, sendo 1=Topo e 2=Esquerda
-	oLabelFont	:= Nil //| Objeto	Indica o objeto, do tipo TFont, que ser· utilizado para definir as caracterÌsticas da fonte aplicada na exibiÁ„o da label.
-	nLabelColor	:= Nil //| NumÈrico	Indica a cor do texto da Label.
+	uP14		:= Nil //| l√≥gico	Compatibilidade.
+	bWhen		:= bWhen  //| Bloco de c√≥digo	Indica o bloco de c√≥digo que ser√° executado quando a mudan√ßa de foco da entrada de dados, na janela em que o controle foi criado, estiver sendo efetuada. Observa√ß√£o: O bloco de c√≥digo retornar verdadeiro (.T.) se o controle permanecer habilitado; caso contr√°rio, retornar falso (.F.).
+	uP16		:= Nil //| l√≥gico	Compatibilidade.
+	uP17		:= Nil //| l√≥gico	Compatibilidade.
+	lReadOnly	:= .F. //| l√≥gico	Indica se o conte√∫do da vari√°vel associada ao objeto permanecer apenas para leitura.
+	bValid		:= {||} //| Bloco de c√≥digo	Indica o bloco de c√≥digo de valida√ß√£o que ser√° executado quando o conte√∫do do objeto for modificado. Retorna verdadeiro (.T.), se o conte√∫do √© v√°lido; caso contr√°rio, falso (.F.).
+	uP20		:= {||}  //| Bloco de c√≥digo	Compatibilidade.
+	uP21		:= Nil //| l√≥gico	Compatibilidade.
+	lNoBorder	:= .T. //| l√≥gico	Indica se habilita(.T.)/desabilita(.F.) a apresenta√ß√£o da borda no objeto.
+	lVScroll	:= .T. //| l√≥gico	Indica se habilita(.T.)/desabilita(.F.) a barra de rolagem vertical. Obs.: O valor default √© Desabilitado.
+	cLabelText	:= "" //| Caractere	indica o texto que ser√° apresentado na Label.
+	nLabelPos	:= 1 //| Num√©rico	Indica a posi√ß√£o da label, sendo 1=Topo e 2=Esquerda
+	oLabelFont	:= Nil //| Objeto	Indica o objeto, do tipo TFont, que ser√° utilizado para definir as caracteristicas da fonte aplicada na exibi√ß√£o da label.
+	nLabelColor	:= Nil //| Num√©rico	Indica a cor do texto da Label.
 
 	oTMultGet := TMultiget():New(nRow,nCol,bSetGet,oWnd,nWidth,nHeight,oFont,lHScroll,uP09,uP10,uP11,lPixel,uP13,uP14,bWhen,uP16,uP17,lReadOnly,bValid,uP20,uP21,lNoBorder,lVScroll,cLabelText,nLabelPos,oLabelFont,nLabelColor)
 //TSimpleEditor(): GoTo ( < nLine> ) -->
@@ -640,32 +641,32 @@ Return()
 Static Function FComboBox(oCombo, nRow, nCol, aItems, cCombo, nWidth, nHeight, oWnd, bWhen, bChange)
 *******************************************************************************
 
-	nRow		:= nRow 	//| numÈrico Indica a coordenada vertical em pixels ou caracteres.
-	nCol		:= nCol 	//| numÈrico Indica a coordenada horizontal em pixels ou caracteres.
-	bSetGet		:= {|u|if(PCount()>0,cCombo:=u,cCombo)} //| bloco de cÛdigo Indica o bloco de cÛdigo, no formato {|u| if( Pcount( )>0, := u, ) }, que ser· executado para atualizar a vari·vel (essa vari·vel deve ser do tipo caracter). Desta forma, se a lista for seq¸encial, o controle atualizar· com o conte˙do do item selecionado, se for indexada, ser· atualizada com o valor do Ìndice do item selecionado.
-	aItems		:= aItems 	//| vetor Indica uma lista de itens e caracteres que ser„o apresentados. Essa lista pode ter os seguintes formatos: Seq¸encial (Exemplo: {"item1","item2",...,"itemN"}) ou Indexada (Exemplo: {"a=item1","b=item2",...,"n=itemN"}).
-	nWidth		:= nWidth 	//| numÈrico Indica a largura em pixels do objeto.
-	nHeight		:= nHeight 	//| numÈrico Indica a altura em pixels do objeto.
-	oDlg		:= oWnd 	//| objeto Indica a janela ou controle visual onde o objeto ser· criado.
-	uP08		:= Nil 		//| numÈrico Compatibilidade.
-	bChange		:= bChange 	//| bloco de cÛdigo Indica o bloco de cÛdigo que ser· executado quando o item selecionado È alterado.
-	bValid		:= {||}  	//| bloco de cÛdigo Indica o bloco de cÛdigo de validaÁ„o que ser· executado quando o conte˙do do objeto for modificado. Retorna verdadeiro (.T.), se o conte˙do È v·lido; caso contr·rio, falso (.F.).
-	nClrBack	:= Nil 		//| numÈrico Indica a cor de fundo do objeto.
-	nClrText	:= Nil 		//| numÈrico Indica a cor de texto do objeto.
-	lPixel		:= .T. 		//| lÛgico Indica se considera as coordenadas passadas em pixels (.T.) ou caracteres (.F.).
-	oFont		:= Nil 		//| objeto Indica o objeto do tipo TFont utilizado para definir as caracterÌsticas da fonte aplicada na exibiÁ„o do conte˙do do controle visual.
+	nRow		:= nRow 	//| num√©rico Indica a coordenada vertical em pixels ou caracteres.
+	nCol		:= nCol 	//| num√©rico Indica a coordenada horizontal em pixels ou caracteres.
+	bSetGet		:= {|u|if(PCount()>0,cCombo:=u,cCombo)} //| bloco de c√≥digo Indica o bloco de c√≥digo, no formato {|u| if( Pcount( )>0, := u, ) }, que ser√° executado para atualizar a vari√°vel (essa vari√°vel deve ser do tipo caracter). Desta forma, se a lista for Sequencial, o controle atualizar com o conte√∫do do item selecionado, se for indexada, ser√° atualizada com o valor do √≠ndice do item selecionado.
+	aItems		:= aItems 	//| vetor Indica uma lista de itens e caracteres que ser√°o apresentados. Essa lista pode ter os seguintes formatos: Sequencial (Exemplo: {"item1","item2",...,"itemN"}) ou Indexada (Exemplo: {"a=item1","b=item2",...,"n=itemN"}).
+	nWidth		:= nWidth 	//| num√©rico Indica a largura em pixels do objeto.
+	nHeight		:= nHeight 	//| num√©rico Indica a altura em pixels do objeto.
+	oDlg		:= oWnd 	//| objeto Indica a janela ou controle visual onde o objeto ser√° criado.
+	uP08		:= Nil 		//| num√©rico Compatibilidade.
+	bChange		:= bChange 	//| bloco de c√≥digo Indica o bloco de c√≥digo que ser√° executado quando o item selecionado √© alterado.
+	bValid		:= {||}  	//| bloco de c√≥digo Indica o bloco de c√≥digo de valida√ß√£o que ser√° executado quando o conte√∫do do objeto for modificado. Retorna verdadeiro (.T.), se o conte√∫do √© v√°lido; caso contr√°rio, falso (.F.).
+	nClrBack	:= Nil 		//| num√©rico Indica a cor de fundo do objeto.
+	nClrText	:= Nil 		//| num√©rico Indica a cor de texto do objeto.
+	lPixel		:= .T. 		//| l√≥gico Indica se considera as coordenadas passadas em pixels (.T.) ou caracteres (.F.).
+	oFont		:= Nil 		//| objeto Indica o objeto do tipo TFont utilizado para definir as caracteristicas da fonte aplicada na exibi√ß√£o do conte√∫do do controle visual.
 	uP15		:= Nil 		//| caractere Compatibilidade.
-	uP16		:= Nil 		//| lÛgico Compatibilidade.
-	bWhen		:= bWhen  	//| bloco de cÛdigo Indica o bloco de cÛdigo que ser· executado quando a mudanÁa de foco da entrada de dados, na janela em que o controle foi criado, estiver sendo efetuada. ObservaÁ„o: O bloco de cÛdigo retornar· verdadeiro (.T.), se o controle permanecer habilitado; caso contr·rio, retornar· falso (.F.).
-	uP18		:= Nil 		//| lÛgico Compatibilidade.
+	uP16		:= Nil 		//| l√≥gico Compatibilidade.
+	bWhen		:= bWhen  	//| bloco de c√≥digo Indica o bloco de c√≥digo que ser√° executado quando a mudan√ßa de foco da entrada de dados, na janela em que o controle foi criado, estiver sendo efetuada. Observa√ß√£o: O bloco de c√≥digo retornar verdadeiro (.T.), se o controle permanecer habilitado; caso contr√°rio, retornar falso (.F.).
+	uP18		:= Nil 		//| l√≥gico Compatibilidade.
 	uP19		:= Nil 		//| vetor Compatibilidade.
-	uP20		:= Nil 		//| bloco de cÛdigo Compatibilidade.
+	uP20		:= Nil 		//| bloco de c√≥digo Compatibilidade.
 	uP21		:= Nil 		//| caractere Compatibilidade.
-	cReadVar	:= 'cCombo' //| caractere Indica o nome da vari·vel, configurada no par‚metro bSetGet, que ser· manipulada pelo objeto. AlÈm disso, esse par‚metro ser· o retorno da funÁ„o ReadVar().
-	cLabelText	:= Nil 		//| caractere indica o texto que ser· apresentado na Label.
-	nLabelPos	:= Nil 		//| numÈrico Indica a posiÁ„o da label, sendo 1=Topo e 2=Esquerda
-	oLabelFont	:= Nil 		//| objeto Indica o objeto, do tipo TFont, que ser· utilizado para definir as caracterÌsticas da fonte aplicada na exibiÁ„o da label.
-	nLabelColor	:= Nil 		//| numÈrico Indica a cor do texto da Label
+	cReadVar	:= 'cCombo' //| caractere Indica o nome da vari√°vel, configurada no parametro bSetGet, que ser√° manipulada pelo objeto. Al√©m disso, esse parametro ser√° o retorno da fun√ß√£o ReadVar().
+	cLabelText	:= Nil 		//| caractere indica o texto que ser√° apresentado na Label.
+	nLabelPos	:= Nil 		//| num√©rico Indica a posi√ß√£o da label, sendo 1=Topo e 2=Esquerda
+	oLabelFont	:= Nil 		//| objeto Indica o objeto, do tipo TFont, que ser√° utilizado para definir as caracteristicas da fonte aplicada na exibi√ß√£o da label.
+	nLabelColor	:= Nil 		//| num√©rico Indica a cor do texto da Label
 
 	oCombo := TComboBox():New(nRow,nCol,bSetGet,aItems,nWidth,nHeight,oDlg,uP08,bChange,bValid,nClrBack,nClrText,lPixel,oFont,uP15,uP16,bWhen,uP18,uP19,uP20,uP21,cReadVar,cLabelText,nLabelPos,oLabelFont,nLabelColor)
 
@@ -674,40 +675,40 @@ Return()
 Static Function FGet(oTGet, nRow, nCol, cGet, nWidth, nHeight, cPict, oWnd, bWhen)
 *********************************************************************
 
-	nRow		:= nRow 	//| NumÈrico		Indica a coordenada vertical em pixels ou caracteres.
-	nCol		:= nCol 	//| NumÈrico		Indica a coordenada horizontal em pixels ou caracteres.
-	bSetGet		:= {|u| if( Pcount( )>0, cGet:= u, cGet) } //| Bloco de cÛdigo	Indica o bloco de cÛdigo, no formato {|u| if( Pcount( )>0, := u, ) }, que ser· executado para atualizar a vari·vel (essa vari·vel deve ser do tipo caracter). Desta forma, se a lista for sequencial, o controle atualizar· com o conte˙do do item selecionado, se for indexada, ser· atualizada com o valor do Ìndice do item selecionado.
-	oDlg		:= oWnd 	//| Objeto			Indica a janela ou controle visual onde o objeto ser· criado.
-	nWidth		:= nWidth 	//| NumÈrico		Indica a largura em pixels do objeto.
-	nHeight		:= nHeight 	//| NumÈrico		Indica a altura em pixels do objeto.
-	cPict		:= cPict 	//| Caracter		Indica a m·scara de formataÁ„o, do conte˙do, que ser· apresentada. Verificar Tabela de Pictures de FormataÁ„o
-	bValid		:= {||If(Empty(cGet),.F.,.T.)} 	//| Bloco de cÛdigo	Indica o bloco de cÛdigo de validaÁ„o que ser· executado quando o conte˙do do objeto for modificado. Retorna verdadeiro (.T.), se o conte˙do È v·lido; caso contr·rio, falso (.F.).
-	nClrFore	:= Nil 		//| NumÈrico		Indica a cor do texto do objeto.
-	nClrBack	:= Nil 		//| NumÈrico		Indica a cor de fundo do objeto.
-	oFont		:= Nil 		//| Objeto			Indica o objeto, do tipo TFont, que ser· utilizado para definir as caracterÌsticas da fonte aplicada na exibiÁ„o do conte˙do do controle visual.
-	uP12		:= .T. 		//| LÛgico			Compatibilidade.
+	nRow		:= nRow 	//| Num√©rico		Indica a coordenada vertical em pixels ou caracteres.
+	nCol		:= nCol 	//| Num√©rico		Indica a coordenada horizontal em pixels ou caracteres.
+	bSetGet		:= {|u| if( Pcount( )>0, cGet:= u, cGet) } //| Bloco de c√≥digo	Indica o bloco de c√≥digo, no formato {|u| if( Pcount( )>0, := u, ) }, que ser√° executado para atualizar a vari√°vel (essa vari√°vel deve ser do tipo caracter). Desta forma, se a lista for sequencial, o controle atualizar com o conte√∫do do item selecionado, se for indexada, ser√° atualizada com o valor do √≠ndice do item selecionado.
+	oDlg		:= oWnd 	//| Objeto			Indica a janela ou controle visual onde o objeto ser√° criado.
+	nWidth		:= nWidth 	//| Num√©rico		Indica a largura em pixels do objeto.
+	nHeight		:= nHeight 	//| Num√©rico		Indica a altura em pixels do objeto.
+	cPict		:= cPict 	//| Caracter		Indica a mascara de formata√ß√£o, do conte√∫do, que ser√° apresentada. Verificar Tabela de Pictures de Formata√ß√£o
+	bValid		:= {||If(Empty(cGet),.F.,.T.)} 	//| Bloco de c√≥digo	Indica o bloco de c√≥digo de valida√ß√£o que ser√° executado quando o conte√∫do do objeto for modificado. Retorna verdadeiro (.T.), se o conte√∫do √© v√°lido; caso contr√°rio, falso (.F.).
+	nClrFore	:= Nil 		//| Num√©rico		Indica a cor do texto do objeto.
+	nClrBack	:= Nil 		//| Num√©rico		Indica a cor de fundo do objeto.
+	oFont		:= Nil 		//| Objeto			Indica o objeto, do tipo TFont, que ser√° utilizado para definir as caracteristicas da fonte aplicada na exibi√ß√£o do conte√∫do do controle visual.
+	uP12		:= .T. 		//| l√≥gico			Compatibilidade.
 	uP13		:= Nil 		//| Objeto			Compatibilidade.
-	lPixel		:= .T. 		//| LÛgico			Indica se considera as coordenadas passadas em pixels (.T.) ou caracteres (.F.).
+	lPixel		:= .T. 		//| l√≥gico			Indica se considera as coordenadas passadas em pixels (.T.) ou caracteres (.F.).
 	uP15		:= Nil 		//| Caracter		Compatibilidade.
-	uP16		:= Nil 		//| LÛgico			Compatibilidade.
-	bWhen		:= bWhen 	//| Bloco de cÛdigo	Indica o bloco de cÛdigo que ser· executado quando a mudanÁa de foco da entrada de dados, no objeto criado, estiver sendo realizada. Se o retorno for verdadeiro (.T.), o objeto continua habilitado; caso contr·rio, falso (.F.).
-	uP18		:= Nil 		//| LÛgico			Compatibilidade.
-	uP19		:= Nil 		//| LÛgico			Compatibilidade.
-	bChange		:= {||} 	//| Bloco de cÛdigo	Indica o bloco de cÛdigo que ser· executado quando o estado ou conte˙do do objeto È modificado pela aÁ„o sobre o controle visual.
-	lReadOnly	:= Nil 		//| LÛgico			Indica se o objeto pode ser editado.
-	lPassword	:= Nil 		//| LÛgico			Indica se, verdadeiro (.T.), o objeto apresentar· asterisco (*) para entrada de dados de senha; caso contr·rio, falso (.F.).
+	uP16		:= Nil 		//| l√≥gico			Compatibilidade.
+	bWhen		:= bWhen 	//| Bloco de c√≥digo	Indica o bloco de c√≥digo que ser√° executado quando a mudan√ßa de foco da entrada de dados, no objeto criado, estiver sendo realizada. Se o retorno for verdadeiro (.T.), o objeto continua habilitado; caso contr√°rio, falso (.F.).
+	uP18		:= Nil 		//| l√≥gico			Compatibilidade.
+	uP19		:= Nil 		//| l√≥gico			Compatibilidade.
+	bChange		:= {||} 	//| Bloco de c√≥digo	Indica o bloco de c√≥digo que ser√° executado quando o estado ou conte√∫do do objeto √© modificado pela a√ß√£o sobre o controle visual.
+	lReadOnly	:= Nil 		//| l√≥gico			Indica se o objeto pode ser editado.
+	lPassword	:= Nil 		//| l√≥gico			Indica se, verdadeiro (.T.), o objeto apresentar asterisco (*) para entrada de dados de senha; caso contr√°rio, falso (.F.).
 	uP23		:= Nil 		//| Caracter		Compatibilidade.
-	cReadVar	:= cGet 	//| Caracter		Indica o nome da vari·vel, configurada no par‚metro bSetGet, que ser· manipulada pelo objeto. AlÈm disso, esse par‚metro ser· o retorno da funÁ„o ReadVar().
+	cReadVar	:= cGet 	//| Caracter		Indica o nome da vari√°vel, configurada no parametro bSetGet, que ser√° manipulada pelo objeto. Al√©m disso, esse parametro ser√° o retorno da fun√ß√£o ReadVar().
 	uP25		:= Nil 		//| Caracter		Compatibilidade.
 	uP26		:= Nil 		//| Caracter		Compatibilidade.
-	uP27		:= Nil 		//| LÛgico			Compatibilidade.
-	lHasButton	:= Nil 		//| LÛgico			Indica se, verdadeiro (.T.), o uso dos botıes padr„o, como calend·rio e calculadora.
-	lNoButton	:= Nil 		//| LÛgico			Oculta o bot„o F3 (HasButton).
-	cLabelText	:= Nil 		//| Caractere		indica o texto que ser· apresentado na Label.
-	nLabelPos	:= Nil  	//| Caractere		Indica a posiÁ„o da label, sendo 1=Topo e 2=Esquerda
-	oLabelFont	:= Nil 		//| Objeto			Indica o objeto, do tipo TFont, que ser· utilizado para definir as caracterÌsticas da fonte aplicada na exibiÁ„o da label.
-	nLabelColor	:= Nil 		//| NumÈrico		Indica a cor do texto da Label.
-	cPlaceHold	:= Nil 		//| Caractere		Define o texto a ser utilizado como place holder, ou seja, o texto que ficar· escrito em cor mais opaca quando nenhuma informaÁ„o tiver sido digitada no campo. (disponÌvel em builds superiores a 7.00.121227P)
+	uP27		:= Nil 		//| l√≥gico			Compatibilidade.
+	lHasButton	:= Nil 		//| l√≥gico			Indica se, verdadeiro (.T.), o uso dos bot√µes padr√£o, como calend√°rio e calculadora.
+	lNoButton	:= Nil 		//| l√≥gico			Oculta o bot√£o F3 (HasButton).
+	cLabelText	:= Nil 		//| Caractere		indica o texto que ser√° apresentado na Label.
+	nLabelPos	:= Nil  	//| Caractere		Indica a posi√ß√£o da label, sendo 1=Topo e 2=Esquerda
+	oLabelFont	:= Nil 		//| Objeto			Indica o objeto, do tipo TFont, que ser√° utilizado para definir as caracteristicas da fonte aplicada na exibi√ß√£o da label.
+	nLabelColor	:= Nil 		//| Num√©rico		Indica a cor do texto da Label.
+	cPlaceHold	:= Nil 		//| Caractere		Define o texto a ser utilizado como place holder, ou seja, o texto que ficar√° escrito em cor mais opaca quando nenhuma informa√ß√£o tiver sido digitada no campo. (dispon√≠vel em builds superiores a 7.00.121227P)
 
 	oTGet := TGet():New(nRow,nCol,bSetGet,oDlg,nWidth,nHeight,cPict,bValid,nClrFore,nClrBack,oFont,uP12,uP13,lPixel,uP15,uP16,bWhen,uP18,uP19,bChange,lReadOnly,lPassword,uP23,cReadVar,uP25,uP26,uP27,lHasButton,lNoButton,cLabelText,nLabelPos,oLabelFont,nLabelColor,cPlaceHold)
 
@@ -778,7 +779,7 @@ Static Function ExcLine(nPos,cTxt)// Exclui Linha Posicionado
 	Local nPI   := 0
 	Local nPF  	:= 0
 
-	If IW_MsgBox("Confirma a Exclusao da Linha ? ","AtenÁ„o !!!", "YESNO")
+	If IW_MsgBox("Confirma a Exclusao da Linha ? ","Aten√ß√£o !!!", "YESNO")
 		aLine := RecTxt(nPos,@cTxt,@cLine,@nPI,@nPF, "A")
 	EndIf
 
@@ -844,7 +845,7 @@ Static Function TelaModLay(aLine, nOperac, nPI, cTxt, aValCG, nPF)//| Tela para 
 
 	Local lCentered := .T.
 	Local cCaption 	:= "Incluir/Alterar/Excluir Linha"
-	Local bValid    := {|| SaveLin(aValCG, aBW, nPI , @cTxt, oWML, nOperac), .T. } //| bloco de cÛdigo  Indica se o conte˙do do di·logo È v·lido. Se o retorno for falso (.F.), o di·logo n„o ser· fechado quando a finalizaÁ„o for solicitada.
+	Local bValid    := {|| SaveLin(aValCG, aBW, nPI , @cTxt, oWML, nOperac), .T. } //| bloco de c√≥digo  Indica se o conte√∫do do di√°logo √© v√°lido. Se o retorno for falso (.F.), o di√°logo n√£o ser√° fechado quando a finaliza√ß√£o for solicitada.
 	
 	Local aCombO 	:= {"L=Linha","R=Retangulo","B=Box","T=Texto","I=Imagem","C=Comentario"}
 	Local aCombC 	:= {"PT=Preto","BR=Branco","VE=Vermnelho","CI=Cinza","AM=Amarelo","AZ=Azul","LA=Laranja" }
@@ -873,7 +874,7 @@ Static Function TelaModLay(aLine, nOperac, nPI, cTxt, aValCG, nPF)//| Tela para 
 	
 	//|Valida Montar Linha Invalida ou incompleta.....  
 	If Len(aLine) < 9 .And. nOperac == "A" .And. lValRec
-		Iw_MsgBox("Linha Inv·lida !!! N„o Possui as 9 PosiÁıes !!! Verifique.... ","ValidaÁ„o","ALERT")
+		Iw_MsgBox("Linha Inv√°lida !!! n√£o Possui as 9 Posi√ß√£es !!! Verifique.... ","Valida√ß√£o","ALERT")
 		Return()
 	Endif
 	
@@ -1032,14 +1033,14 @@ Return()
 Static Function ASFile(lOper, cTitulo )//| Abre/Salva Arquivo
 *********************************************************************
 
-	Local cMascara		:= "Arquivo Layout (.lay)|*.lay" //| Caracter	Indica o nome do arquivo ou m·scara.
-	Local cTitulo		:= cTitulo 			//| Caracter	Indica o tÌtulo da janela. Caso o par‚metro n„o seja especificado, o tÌtulo padr„o ser· apresentado.
-	Local nMascPad		:= 0 				//| NumÈrico	Indica o n˙mero da m·scara.
-	Local cDirIni		:= "\" 				//| Caracter	Indica o diretÛrio inicial.
-	Local lSalvar		:= lOper 			//| LÛgico	Indica se È um "save dialog - (.F.)" ou um "open dialog - .T. ".
-	Local nOpcoes		:= GETF_LOCALHARD	//| NumÈrico	Indica a opÁ„o de funcionamento. Para mais informaÁıes das funcionalidades disponÌveis, consulte a ·rea ObservaÁıes.
-	Local lArvore		:= .F.				//| LÛgico	Indica se, verdadeiro (.T.), apresenta o ·rvore do servidor; caso contr·rio, falso (.F.).
-	Local lKeepCase	:= .T. 				//| LÛgico	Indica se, verdadeiro (.T.), mantÈm o case original; caso contr·rio, falso (.F.).
+	Local cMascara		:= "Arquivo Layout (.lay)|*.lay" //| Caracter	Indica o nome do arquivo ou mascara.
+	Local cTitulo		:= cTitulo 			//| Caracter	Indica o t√≠tulo da janela. Caso o parametro n√£o seja especificado, o t√≠tulo padr√£o ser√° apresentado.
+	Local nMascPad		:= 0 				//| Num√©rico	Indica o n√∫mero da mascara.
+	Local cDirIni		:= "\" 				//| Caracter	Indica o diret√≥rio inicial.
+	Local lSalvar		:= lOper 			//| l√≥gico	Indica se √© um "save dialog - (.F.)" ou um "open dialog - .T. ".
+	Local nOpcoes		:= GETF_LOCALHARD	//| Num√©rico	Indica a op√ß√£o de funcionamento. Para mais informa√ß√£es das funcionalidades dispon√≠veis, consulte a √Årea Observa√ß√£es.
+	Local lArvore		:= .F.				//| l√≥gico	Indica se, verdadeiro (.T.), apresenta o arvore do servidor; caso contr√°rio, falso (.F.).
+	Local lKeepCase	:= .T. 				//| l√≥gico	Indica se, verdadeiro (.T.), mant√©m o case original; caso contr√°rio, falso (.F.).
 
 	Default cTitulo := If(lOper==_SAVE,"Salvar arquivo...","Abrir arquivo...")
 
@@ -1222,7 +1223,7 @@ Static Function VerSx1(lPerg) //| Verifica Se Existe as Perguntas e Faz os devid
 	PutSx1("GLAYMON","07"    ,"Margem Direita  (Milimetro):" ,""      ,""        ,"MV_CH6"  ,"N"    ,5         ,0         ,0        ,"G"   ,"","","","","MV_PAR07",""       ,""       ,""       ,""     ,""        ,""        ,""        ,""         ,""         ,""         ,""        ,""        ,""        ,""      ,""        ,""        ,{""}    ,{""}    ,{""}    )
 	PutSx1("GLAYMON","08"    ,"Margem Inferior (Milimetro):" ,""      ,""        ,"MV_CH7"  ,"N"    ,5         ,0         ,0        ,"G"   ,"","","","","MV_PAR08",""       ,""       ,""       ,""     ,""        ,""        ,""        ,""         ,""         ,""         ,""        ,""        ,""        ,""      ,""        ,""        ,{""}    ,{""}    ,{""}    )
 
-	Pergunte("RLAYMON",lPerg)
+	Pergunte("GLAYMON",lPerg)
 
 //| Ajusta as Variaveis Conforme as Perguntas....
 	If !lperg
@@ -1260,9 +1261,8 @@ Static Function VerSx1(lPerg) //| Verifica Se Existe as Perguntas e Faz os devid
 		EndIf
 	
 	//| Margens 
-		bSetMargin := {|| oPrn:SetMargin(MV_PAR05, MV_PAR06, MV_PAR07, MV_PAR08 ) }
-
+	bSetMargin := {|| oPrn:SetMargin( MV_PAR05, MV_PAR06, MV_PAR07, MV_PAR08 ) }
+	
 	EndIf
-
 
 Return()
