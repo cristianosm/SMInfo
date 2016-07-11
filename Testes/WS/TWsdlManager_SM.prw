@@ -1,74 +1,165 @@
 #include 'protheus.ch'
 #include 'parmtype.ch'
 
-User function TWsdlManager_SM()
 //|Detalhes: http://tdn.totvs.com/display/tec/Acesso+a+Web+Services+que+exigem+certificados+de+CA|
-// U_TWsdlManager_SM()
-  Local lRet    := Nil
-  Local cMsg    := ""
-  Local oWsdl   := Nil
-  Local cMsgRet := ""
+// https://www.webdanfe.com.br/danfe/WebDanfeApi.aspx
 
-  oWsdl := TWsdlManager():New()
-  oWsdl:cSSLCACertFile := "\CSM\000001_ca.pem"
-  oWsdl:cSSLCertFile   := "\CSM\000001_cert.pem"
-  oWsdl:cSSLKeyFile    := "\CSM\000001_key.pem"
-  oWsdl:cSSLKeyPwd     := "FISCAL2015" //se necessário
-  oWsdl:nSSLVersion    := 1
-  oWsdl:nTimeout       := 120
 
-  xRet := oWsdl:ParseURL("https://www.nfe.fazenda.gov.br/NfeDownloadNF/NfeDownloadNF.asmx?wsdl")
-  if xRet == .F.
-    conout("Erro ParseURL: " + oWsdl:cError)
-    Return
-  endif
+*******************************************************************************
+User function TWsdlManager_SM()
+	*******************************************************************************
 
-  // Define a operação
-  lRet := oWsdl:SetOperation("nfeDownloadNF")
-  If lRet == .F.
-    conout("Erro SetOperation: " + oWsdl:cError)
-    return
-  EndIf
+	Private lRet    	:= Nil
+	Private cXml    	:= ""  //| Monta a Estrutura do XML.
+	Private oWsdl   	:= Nil
+	Private cXmlRet 	:= ""
+	Private oXmlRet 	:= ""
+	Private cXmlError 	:= ""
+	Private cXmlWarning := ""
 
-  // Mensagem enviada com namespace de SOAP 1.1, que dará erro, pois, como o WSD possui SOAP 1.1 e 1.2, a classe utilizará SOAP 1.2
-  // cMsg := '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:nfed="http://www.portalfiscal.inf.br/nfe/wsdl/NfeDownloadNF">' + CRLF
-  // cMsg += '    <soapenv:Header>' + CRLF
-  // cMsg += '       <nfed:nfeCabecMsg>' + CRLF
-  // cMsg += '          <nfed:versaoDados>1.00</nfed:versaoDados>' + CRLF
-  // cMsg += '          <nfed:cUF>31</nfed:cUF>' + CRLF
-  // cMsg += '       </nfed:nfeCabecMsg>' + CRLF
-  // cMsg += '    </soapenv:Header>' + CRLF
-  // cMsg += '    <soapenv:Body>' + CRLF
-  // cMsg += '       <nfed:nfeDadosMsg>' + CRLF
-  // cMsg += '          <downloadNFe versao="1.00" xmlns="http://www.portalfiscal.inf.br/nfe"><tpAmb>1</tpAmb><xServ>DOWNLOAD NFE</xServ><CNPJ>86501400000104</CNPJ><chNFe>31150502806413000274550010000074971000042278</chNFe></downloadNFe>' + CRLF
-  // cMsg += '       </nfed:nfeDadosMsg>' + CRLF
-  // cMsg += '    </soapenv:Body>' + CRLF
-  // cMsg += '</soapenv:Envelope>'
+	OP_NfeConsultaDest("L") //| Lista
 
-  // Mesma mensagem que a anterior, mas com namespace de SOAP 1.2
-  cMsg := '<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:nfed="http://www.portalfiscal.inf.br/nfe/wsdl/NfeDownloadNF">' + CRLF
-  cMsg += '   <soapenv:Header>' + CRLF
-  cMsg += '      <nfed:nfeCabecMsg>' + CRLF
-  cMsg += '          <nfed:versaoDados>1.00</nfed:versaoDados>' + CRLF
-  cMsg += '          <nfed:cUF>31</nfed:cUF>' + CRLF
-  cMsg += '       </nfed:nfeCabecMsg>' + CRLF
-  cMsg += '    </soapenv:Header>' + CRLF
-  cMsg += '    <soapenv:Body>' + CRLF
-  cMsg += '       <nfed:nfeDadosMsg>' + CRLF
-  cMsg += '          <downloadNFe versao="1.00" xmlns="http://www.portalfiscal.inf.br/nfe"><tpAmb>1</tpAmb><xServ>DOWNLOAD NFE</xServ><CNPJ>88912613001278</CNPJ><chNFe>31150502806413000274550010000074971000042278</chNFe></downloadNFe>' + CRLF
-  cMsg += '       </nfed:nfeDadosMsg>' + CRLF
-  cMsg += '    </soapenv:Body>' + CRLF
-  cMsg += '</soapenv:Envelope>'
+	OP_NfeDownloadNF("N") //| Nota
 
-  // Envia uma mensagem SOAP personalizada ao servidor
-  lRet := oWsdl:SendSoapMsg( cMsg )
-  If lRet == .F.
-    conout( "Erro SendSoapMsg: " + oWsdl:cError )
-    conout( "Erro SendSoapMsg FaultCode: " + oWsdl:cFaultCode )
-    Return
-  EndIf
+	Return()
+	*******************************************************************************
+Static Function OP_NfeConsultaDest(cQuem)
+	*******************************************************************************
 
-  cMsgRet := oWsdl:GetSoapResponse()
-  conout( cMsgRet )
+	oWsdl := TWsdlManager():New()
+	oWsdl:cSSLCACertFile := "\csm\000001_ca.pem"
+	oWsdl:cSSLCertFile   := "\csm\000001_cert.pem"
+	oWsdl:cSSLKeyFile    := "\csm\000001_key.pem"
+	oWsdl:cSSLKeyPwd     := "FISCAL" //se necessario
+	oWsdl:nSSLVersion    := 1
+	oWsdl:nTimeout       := 120
 
-return()
+	//| Sefaz-RS
+	xRet := oWsdl:ParseURL("https://nfe.sefazrs.rs.gov.br/ws/nfeConsultaDest/nfeConsultaDest.asmx?wsdl")
+	If xRet == .F.
+		conout("Erro ParseURL: " + oWsdl:cError)
+		Return()
+	Endif
+
+	// Define a operacao
+	lRet := oWsdl:SetOperation("nfeConsultaNFDest") //--> Operacao do WS
+	If lRet == .F.
+		conout("Erro SetOperation: " + oWsdl:cError)
+		return
+	EndIf
+	cXml := cQuem
+	MontaXml( @cXml ) //| Monta a estrutura do XML conforme layout
+
+	//cXml := U_Caixa(cXml)
+
+	// Envia uma mensagem SOAP personalizada ao servidor
+	lRet := oWsdl:SendSoapMsg( cXml )
+	If lRet == .F.
+		conout( "Erro SendSoapMsg: " + oWsdl:cError )
+		conout( "Erro SendSoapMsg FaultCode: " + oWsdl:cFaultCode )
+	EndIf
+
+	cXmlRet := oWsdl:GetSoapResponse()
+
+	oXmlRet := XmlParser (cXmlRet, "", @cXmlError, @cXmlWarning )
+
+	U_CaixaTexto (VarInfo( "OBJETO" , oXmlRet , /*nMargem*/ , lHtml := .F. , lEcho := .F. ))
+
+	Return()
+	*******************************************************************************
+Static Function OP_NfeDownloadNF(cQuem)
+	*******************************************************************************
+
+	oWsdl := TWsdlManager():New()
+	oWsdl:cSSLCACertFile := "\csm\000001_ca.pem"
+	oWsdl:cSSLCertFile   := "\csm\000001_cert.pem"
+	oWsdl:cSSLKeyFile    := "\csm\000001_key.pem"
+	oWsdl:cSSLKeyPwd     := "FISCAL" //se necessario
+	oWsdl:nSSLVersion    := 1
+	oWsdl:nTimeout       := 120
+
+	//| Sefaz-RS
+	xRet := oWsdl:ParseURL("https://nfe.sefazrs.rs.gov.br/ws/nfeConsultaDest/nfeConsultaDest.asmx?wsdl")
+	If xRet == .F.
+		conout("Erro ParseURL: " + oWsdl:cError)
+		Return()
+	Endif
+
+	// Define a operacao
+	lRet := oWsdl:SetOperation("nfeDownloadNF") //--> Operacao do WS
+	If lRet == .F.
+		conout("Erro SetOperation: " + oWsdl:cError)
+		return
+	EndIf
+
+	cXml := cQuem
+	MontaXml( @cXml ) //| Monta a estrutura do XML conforme layout
+
+	//cXml := U_Caixa(cXml)
+
+	// Envia uma mensagem SOAP personalizada ao servidor
+	lRet := oWsdl:SendSoapMsg( cXml )
+	If lRet == .F.
+		conout( "Erro SendSoapMsg: " + oWsdl:cError )
+		conout( "Erro SendSoapMsg FaultCode: " + oWsdl:cFaultCode )
+	EndIf
+
+	cXmlRet := oWsdl:GetSoapResponse()
+
+	oXmlRet := XmlParser (cXmlRet, "", @cXmlError, @cXmlWarning )
+
+	U_CaixaTexto (VarInfo( "OBJETO" , oXmlRet , /*nMargem*/ , lHtml := .F. , lEcho := .F. ))
+
+	return()
+	*******************************************************************************
+Static Function MontaXml( cXml )
+	*******************************************************************************
+	//| SOAP 1.2
+
+	If cXml == "L" // Lista
+
+		cXml := '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:nfec="http://www.portalfiscal.inf.br/nfe/wsdl/NfeConsultaDest">' + CRLF
+		cXml += '   <soap:Header>' 																	+ CRLF
+		cXml += '      <nfec:nfeCabecMsg>' 															+ CRLF
+		cXml += '         <nfec:cUF>43</nfec:cUF>' 													+ CRLF
+		cXml += '         <nfec:versaoDados>1.01</nfec:versaoDados>' 								+ CRLF
+		cXml += '      </nfec:nfeCabecMsg>' 														+ CRLF
+		cXml += '   </soap:Header>' 																+ CRLF
+		cXml += '   <soap:Body>' 																	+ CRLF
+		cXml += '      <nfec:nfeDadosMsg>' 															+ CRLF
+		cXml += '         <consNFeDest versao="1.01" xmlns="http://www.portalfiscal.inf.br/nfe" >' 	+ CRLF
+		cXml += '	   	  <tpAmb>1</tpAmb>' 														+ CRLF
+		cXml += '	   	  <xServ>CONSULTAR NFE DEST</xServ>' 										+ CRLF
+		cXml += '	   	  <CNPJ>88613922001278</CNPJ>' 												+ CRLF
+		cXml += '	   	  <indNFe>0</indNFe>' 														+ CRLF
+		cXml += '	   	  <indEmi>1</indEmi>' 														+ CRLF
+		cXml += '	   	  <ultNSU>0</ultNSU>' 														+ CRLF
+		cXml += '	   </consNFeDest>' 																+ CRLF
+		cXml += '      </nfec:nfeDadosMsg>' 														+ CRLF
+		cXml += '    </soap:Body>' 																	+ CRLF
+		cXml += '</soap:Envelope>' 																	+ CRLF
+
+	ElseIf cXml == "N" // NF
+
+		cXml := '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:nfed="http://www.portalfiscal.inf.br/nfe/wsdl/NfeDownloadNF">' + CRLF
+		cXml += '	<soap:Header>' + CRLF
+		cXml += '		<nfed:nfeCabecMsg>' + CRLF
+		cXml += '			<nfed:cUF>43</nfed:cUF>' + CRLF
+		cXml += '			<nfed:versaoDados>1.01</nfed:versaoDados>' + CRLF
+		cXml += '		</nfed:nfeCabecMsg>' + CRLF
+		cXml += '	</soap:Header>' + CRLF
+		cXml += '	<soap:Body>' + CRLF
+		cXml += '		<nfed:nfeDadosMsg>' + CRLF
+		cXml += '          <downloadNFe versao="1.01" xmlns="http://www.portalfiscal.inf.br/nfe">' + CRLF
+		cXml += '				<tpAmb>1</tpAmb>' + CRLF
+		cXml += '				<xServ>DOWNLOAD NFE</xServ>' + CRLF
+		cXml += '				<CNPJ>88613922001278</CNPJ>' + CRLF
+		cXml += '				<chNFe>43160608029317000162550010000116621000116622</chNFe>' + CRLF
+		cXml += '				</downloadNFe>' + CRLF
+		cXml += '       </nfed:nfeDadosMsg>' + CRLF
+		cXml += '    </soap:Body>' + CRLF
+		cXml += '</soap:Envelope>' + CRLF
+
+	EndIF
+
+Return ( cXml )
