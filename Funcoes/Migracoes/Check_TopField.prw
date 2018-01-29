@@ -2,8 +2,10 @@
 #Include 'Protheus.ch'
 #Include "Tbiconn.ch"
 
-#Define ORA_ER942 "ORA-00942"
-//#Define ORA_ER001 "ORA-00942" //ERRO: unique constraint violated
+#Define ORA_ERRO "ORA-00942" // ORA-00942: table or view does not exist
+#Define SQL_ERRO "208 (S0002)" // 208 (S0002): Invalid object name
+
+
 //#Define NUMTABSX2 5635
 
 #Define _SIM_	1
@@ -13,14 +15,23 @@
 #Define _EXIST_	 2
 #Define _NEHUMA_ 3
 
+
+#Define ORACLE  'ORACLE' //| Oracle 
+#Define MSSQL 	'MSSQL'  //| Microsoft Sql Server
+
+
 *******************************************************************************
 User Function Check_TopField()
 	*******************************************************************************
 
-	Local oProcess := Nil
-	Local lEnd	:= Nil
+	Local oProcess 	:= Nil
+	Local lEnd		:= Nil
 	Local cScript	:= Nil
-
+	Local cTpBanco 	:= Alltrim(TCGetDB()) //| Recupera o Tipo do Banco ....
+	
+	
+	Private cPreB 			:= If(cTpBanco == 'ORACLE', 'SIGA' , 'dbo' ) // Prefixo do Banco.... 
+	Private cBErr			:= If(cTpBanco == 'ORACLE', ORA_ERRO , SQL_ERRO ) // Prefixo do Banco....
 	Private oError 			:= ErrorBlock( {|e| conout( "Mensagem de Erro: "+ chr(10) + e:Description ) /*, "cristiano.machado@imdepa.com.br")**/ } )
 	Private lShowSql 		:= .F.
 	Private lContinua 		:= .T.
@@ -53,23 +64,24 @@ User Function Check_TopField()
 	*******************************************************************************
 Static Function Verifica(oProcess, lEnd)
 	*******************************************************************************
-	Local cRet := ""
-	Local cSql := ""
-	Local btabOk	:= {|| If(AT(ORA_ER942,cRet)>0,.F.,.T.) }
+	Local cRet 		:= ""
+	Local cSql 		:= ""
+	Local btabOk	:= {|| If(AT(cBErr,cRet)>0,.F.,.T.) }
 	Local x2Alias	:= ""
 	Local x2Table	:= ""
-	Local cLine	:= Nil
+	Local cLine		:= Nil
 
 	Local cFTable	:= ""
 	Local cFName	:= ""
 	Local cFType	:= ""
 	Local cFPrec	:= ""
-	Local cFDec := ""
+	Local cFDec 	:= ""
 
-	Local bInsert := {|| cInsert := "Insert into TOP_FIELD (FIELD_TABLE,FIELD_NAME,FIELD_TYPE,FIELD_PREC,FIELD_DEC) values ( '"+cFTable+"', '"+cFName+"', '"+cFType+"', '"+cFPrec+"', '"+cFDec+"')" }
-	Local bInsHas := {|| cInsHas := "Insert into TOP_FIELD (FIELD_TABLE,FIELD_NAME,FIELD_TYPE,FIELD_PREC,FIELD_DEC) values ( 'SIGA."+x2Table+"','@@HAS_DFT_VAL@@','X','0','0') " }
-	Local bDelCpo := {|| cDelCpo := "Delete Top_Field Where FIELD_TABLE = '"+cFTable+"' And FIELD_NAME = '"+cFName+"' " }
-
+	Local bInsert 	:= {|| cInsert := "INSERT INTO "+cPreB+".TOP_FIELD (FIELD_TABLE,FIELD_NAME,FIELD_TYPE,FIELD_PREC,FIELD_DEC) VALUES ( '"+cFTable+"', '"+cFName+"', '"+cFType+"', '"+cFPrec+"', '"+cFDec+"')" }
+	Local bInsHas 	:= {|| cInsHas := "INSERT INTO "+cPreB+".TOP_FIELD (FIELD_TABLE,FIELD_NAME,FIELD_TYPE,FIELD_PREC,FIELD_DEC) VALUES ( '"+cPreB+"."+x2Table+"','@@HAS_DFT_VAL@@','X','0','0') " }
+	//Local bDelCpo := {|| cDelCpo := "Delete Top_Field Where FIELD_TABLE = '"+cFTable+"' And FIELD_NAME = '"+cFName+"' " }
+	Local bDelTab 	:= {|| cDelTab := "DELETE "+cPreB+".TOP_FIELD WHERE FIELD_TABLE = '"+cFTable+"' " }
+	
 	oProcess:SetRegua1( VerTamSx2() )
 	oProcess:SetRegua2( 0 )
 
@@ -79,12 +91,12 @@ Static Function Verifica(oProcess, lEnd)
 	EndIf
 
 	If MV_PAR01 == _SIM_ // So trunca caso a Pergunta seja SIM....
-		cRet := ExecMySql("Truncate Table TOP_FIELD","","E",lShowSql)
+		cRet := ExecMySql("TRUNCATE TABLE "+cPreB+".TOP_FIELD","","E",lShowSql)
 	EndIf
 
 	DbSelectArea("SX3");DbSetOrder(1);dbGotop()
-	DbSelectArea("SX2");DbGotop()
-	DbSeek(MV_PAR02,.F.)
+	DbSelectArea("SX2");DbSetOrder(1);dbGotop()
+	DbSeek(MV_PAR02,.T.)
 	While !EOF() .And. SX2->X2_ARQUIVO <= MV_PAR03
 
 		x2Table	:= Alltrim(SX2->X2_ARQUIVO)
@@ -92,15 +104,15 @@ Static Function Verifica(oProcess, lEnd)
 
 		oProcess:IncRegua1("Analisando Tabela: " + x2Table )
 
-		cSql := " Select * From " + x2Table + " Where RowNum = 1 "
+		cSql := " SELECT MIN( R_E_C_N_O_ ) RECNO FROM " + cPreB +"."+ x2Table + " "
 		cRet := ExecMySql(cSql,"","E",lShowSql)
 
 		lExist_Table := Eval(btabOk) // Confirma que a Tabela Existe no Banco...
-
-		//| Deleta a chave padrao da tabela caso exista ....
-		cFTable := "SIGA."+x2Table
-		cFName := "@@HAS_DFT_VAL@@"
-		cRet := ExecMySql( Eval(bDelCpo),"","E",lShowSql)
+		
+		//| Deleta a tabela no Top_Field
+		cFTable :=cPreB+"."+x2Table
+		cFName 	:= "@@HAS_DFT_VAL@@"
+		cRet 	:= ExecMySql( Eval(bDelTab),"","E",lShowSql)
 
 		// Cria a Chave na Top_Field Padrao da Tabela
 		cRet := ExecMySql( Eval(binsHas),"","E",lShowSql)
@@ -115,8 +127,8 @@ Static Function Verifica(oProcess, lEnd)
 			If Sx3ToTop(@cFTable, @cFName, @cFType, @cFPrec, @cFDec ) // Alimneta as Variaveis envolvidas e se deve ser criado...
 
 				//| Deleta o Campos Caso Exista....
-				Procmem(oProcess, PadR("Deletando Campo....:",20) + SX3->X3_CAMPO )
-				cRet := ExecMySql( Eval(bDelCpo),"","E",lShowSql)
+				//Procmem(oProcess, PadR("Deletando Campo....:",20) + SX3->X3_CAMPO )
+				//cRet := ExecMySql( Eval(bDelCpo),"","E",lShowSql)
 
 				//| Insere a Nova Config do Campo ...
 				Procmem(oProcess, PadR("Inserindo Campo....:",20) + SX3->X3_CAMPO )
@@ -131,7 +143,7 @@ Static Function Verifica(oProcess, lEnd)
 
 		If Mv_Par04 <> _NEHUMA_
 
-			If MV_PAR04 == _TODAS_ .Or. (MV_PAR04 == _EXIST_ .And. lExist_Table )
+			If MV_PAR04 == _TODAS_ .Or. ( MV_PAR04 == _EXIST_ .And. lExist_Table )
 
 				Begin Sequence
 
@@ -190,9 +202,8 @@ Static Function VerTamSx2()
 Static Function Sx3ToTop(cFTable, cFName, cFType, cFPrec, cFDec )
 	*******************************************************************************
 	Local lRet	:= .T.
-
 	// Tabela
-	cFTable	:= Alltrim("SIGA."+ SX2->X2_ARQUIVO)
+	cFTable	:= Alltrim(cPreB + "." + SX2->X2_ARQUIVO)
 
 	//| Campo
 	cFName	:= Alltrim(SX3->X3_CAMPO)
@@ -297,7 +308,7 @@ Static Function ExecMySql( cSql , cCursor , lModo, lMostra, lChange )
 		If lChange
 			cSql := ChangeQuery(cSql)
 		Else
-			cSql := Upper(cSql)
+			//cSql := Upper(cSql)
 		EndIf
 
 		If( Select(cCursor) <> 0 )
@@ -309,7 +320,7 @@ Static Function ExecMySql( cSql , cCursor , lModo, lMostra, lChange )
 
 	ElseIf lModo == "E" //| Comandos
 
-		cSql := Upper(cSql)
+		//cSql := Upper(cSql)
 
 		nRet := TCSQLExec(cSql)
 
@@ -323,7 +334,7 @@ Static Function ExecMySql( cSql , cCursor , lModo, lMostra, lChange )
 
 	ElseIf lModo == "P" //Procedure
 
-		cSql := Upper(cSql)
+		//cSql := Upper(cSql)
 
 		TCSQLExec("BEGIN")
 
