@@ -146,7 +146,9 @@ Static Function Verifica(oProcess, lEnd)
 			If MV_PAR04 == _TODAS_ .Or. ( MV_PAR04 == _EXIST_ .And. lExist_Table )
 
 				Begin Sequence
-
+					
+					
+					
 					Procmem(oProcess,"DbSelectArea.......:"+x2Alias )
 					DbSelectArea(x2Alias)
 
@@ -158,6 +160,9 @@ Static Function Verifica(oProcess, lEnd)
 
 					Procmem(oProcess,"TcRefresh..........:"+x2Alias )
 					TcRefresh( x2Table )
+					
+					Procmem(oProcess,"TCRefresh.......:"+x2Alias )
+					TCRefresh(x2Table)
 
 				End Sequence
 
@@ -209,7 +214,7 @@ Static Function Sx3ToTop(cFTable, cFName, cFType, cFPrec, cFDec )
 	cFName	:= Alltrim(SX3->X3_CAMPO)
 
 	// Tipo do Campo
-	If SX3->X3_TIPO <> "C" .And. !(SX3->X3_CONTEXT == 'V') //| Somente os Campos Nao Caracteres Fazem Parte devem ser inseridos na Top_Field
+	If SX3->X3_TIPO <> "C" /*.And. SX3->X3_TIPO <> "D" */.and. !(SX3->X3_CONTEXT == 'V') //| Somente os Campos Nao Caracteres Fazem Parte devem ser inseridos na Top_Field
 		Do Case
 			Case SX3->X3_TIPO == "N" //| Numerico
 			cFType := "P"
