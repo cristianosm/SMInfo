@@ -119,6 +119,20 @@ User Function TmkActive()
         Public aOfertas   :={}  //Armazena os Itens de Oferta
         Public aChaveOfert:={}  //Armazena os Registros Chave da Oferta Automatica
         Public lCorreia   :=.F.
+		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		//³  SALVA TECLAS DE ATALHO                                   	³
+		//³  OCORRENCIA DE ERRO APOS CHAMAR ROTINAS FORA DO CALLCENTER	³
+		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ		
+		Public cBckF4  	:=	''		// 	Calcula Margem
+		Public cBckF5  	:=	''		// 	Limpeza da tela
+		Public cBckF6  	:=	''		// 	Condicao de Pagamento
+		Public cBckF7  	:=	'' 		// 	Marketing Ativo
+		Public cBckF8  	:=	'' 		// 	Situacao Financeira
+		Public cBckF9  	:=	''		//	Caracteristicas do Produto
+		Public cBckF10 	:=	'' 		//	Consulta do historico de ligacoes 
+		Public cBckF11 	:=	'' 		//	Tela F11
+		Public cBckF12 	:=	'' 		//	Ultimo cliente do atedimento
+		Public cBckAltF2:=	''		// 	Tela de Impostos
         
 		SetKey(K_ALT_F2,  {|| ExecBlock('TelaImpostos', .F., .F.) })
 		
@@ -154,9 +168,24 @@ If TkGetTipoAte() != "3" //Se nao for TELECOBRANCA
 	Set key VK_F12 to
 	SetKey(VK_F12, {|| U_IMDM100()}) 
 	
+	Set key VK_F4 to
+	SetKey(VK_F4, {|| U_FDEFMC()})
 
-
-
+	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+	//³  SALVA TECLAS DE ATALHO                                   	³
+	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+	cBckF4  	:=	SetKey(VK_F4)		// 	Calcula Margem
+	cBckF5  	:=	SetKey(VK_F5)		// 	Limpeza da tela
+	cBckF6  	:=	SetKey(VK_F6)		// 	Condicao de Pagamento
+	cBckF7  	:=	SetKey(VK_F7) 		// 	Marketing Ativo
+	cBckF8  	:=	SetKey(VK_F8) 		// 	Situacao Financeira
+	cBckF9  	:=	SetKey(VK_F9)		//	Caracteristicas do Produto
+	cBckF10 	:=	SetKey(VK_F10) 		//	Consulta do historico de ligacoes 
+	cBckF11 	:=	SetKey(VK_F11) 		//	Tela F11
+	cBckF12 	:=	SetKey(VK_F12) 		//	Ultimo cliente do atedimento
+	cBckAltF2	:=	SetKey(K_ALT_F2)	// 	Tela de Impostos
+	// NECESSARIO CHAMAR RESTATALHOS...
+	ExecBlock('RestAtalhos',.F.,.F.,)
 	//|ANALISTA: CRISTIANO MACHADO DESC.: PERCENTUAL DO FRETE   DATA: 31/07/13
 	U_CAMPRODAPE()
 	//FIM
@@ -167,8 +196,6 @@ If TkGetTipoAte() != "3" //Se nao for TELECOBRANCA
 	//Set key K_SH_F1 to
 	//SetKey(K_SH_F1, {|| U_FDEFMC()})
 	
-	Set key VK_F4 to
-	SetKey(VK_F4, {|| U_FDEFMC()})
 
 
 EndIf

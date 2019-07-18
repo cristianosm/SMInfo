@@ -45,7 +45,7 @@ User Function Tmkvfim()
 	Local _aArea := GetArea()
 	Local aAreaSA1 := SA1->(GetArea())
 	Local nRecSA1  := SA1->(Recno())
-	Local cOld_F10 := SetKey(VK_F10)
+	//Local cOld_F10 := SetKey(VK_F10)
 
 	//MaFisSave()
 
@@ -72,8 +72,9 @@ User Function Tmkvfim()
 	EndIf
 
 	//MaFisRestore()
-
-	SetKey(VK_F10, cOld_F10)
+	
+	ExecBlock('RestAtalhos',.F.,.F.,)
+	//SetKey(VK_F10, cOld_F10)
 
 Return(.T.)
 *******************************************************************************

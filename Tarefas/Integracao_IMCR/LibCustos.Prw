@@ -88,13 +88,13 @@ User Function CalCusBase(lVerST, _nItem, _oProcess, _nMC, _nMCR, _nIMC, _nIMCg, 
 	Local nValDesp 		:= 0
 	Local nAcreCon 		:= 0
 	Local nValFret 		:= 0
-	Local nCalcIcm 		:= 0
+	Local nCalcIcm 		:= 0 // Base ICMS
 	Local nAlicIpi 		:= 0
 	Local nMVA 			:= 0
-	Local nValIcmSt 	:= 0
+	Local nValIcmSt 	:= 0 
 	Local nIcmRetido 	:= 0
 	Local nValFrtA 		:= 0
-	Local nBaseICM		:= 0
+//	Local nBaseICM		:= 0
 	Local nRatDesp		:= 0
 
 	Local lRedesp    	:= .F.
@@ -167,24 +167,31 @@ User Function CalCusBase(lVerST, _nItem, _oProcess, _nMC, _nMCR, _nIMC, _nIMCg, 
 			EndIf
 		EndIf
 
-		nBaseICM := NoRound((nVlrItem   + nValDesp + nAcreCon + nValFrtA),2)
+//		nBaseICM := NoRound((nVlrItem   + nValDesp + nAcreCon + nValFrtA),2)
 
-		nBaseICM := IIF(cMoeda==1,nBaseICM,xMoeda(nBaseICM,cMoeda,1,dDataBase,nDecBASEICM))
+//		nBaseICM := IIF(cMoeda==1,nBaseICM,xMoeda(nBaseICM,cMoeda,1,dDataBase,nDecBASEICM))
 
 		nFretrSM := cFretran
 
 		IF (xFilial(cTabCab) $ cMVFILFRT ) .AND. (!lCliVinc) .AND. !(lCliFEsp) .AND. cTpFrete <> 'F'
-			nFretrSM := cFretran * nImdPerFrt
+			nFretrSM := cFretran * nImdPerFrt // 
 		EndIf
 
 
 		IF (xFilial(cTabCab) $ cMVFILFRT ) .AND. (!lCliVinc) .AND. !(lCliFEsp) .AND. cTpFrete <> 'F'
-
+			
 			nValFret := NoRound(nTotAcre / nValMerc *  nFretrSM , 2) 
-			nValFrtA := NoRound(nTotAcre / nValMerc *  nCFrete  , 2)
+			nValFrtA := NoRound(nTotAcre / nValMerc *  nCFrete  , 2) // 
 		Else
-			nValFret := NoRound(nTotAcre / nValMerc * nCFrete,2) //Valor Frete
-			nValFrtA := 0
+			If cTpFrete <> 'F' .And. nFretCal > 0 // Frete Destacado - Cristiano 
+				
+				nValFret := NoRound(nTotAcre / nValMerc *  nFretrSM , 2)
+				nValFrtA := NoRound(nTotAcre / nValMerc *  nFretCal , 2)
+			Else
+			
+				nValFret := NoRound(nTotAcre / nValMerc * nCFrete,2) //Valor Frete
+				nValFrtA := 0
+			EndIf
 		EndIf
 
 		If cTpFrete == "C" .AND. nCFrete !=0
@@ -197,7 +204,7 @@ User Function CalCusBase(lVerST, _nItem, _oProcess, _nMC, _nMCR, _nIMC, _nIMCg, 
 				nFreteItem	:= nValFret //- (nValFret * 0.2) // MENOS 20%
 			EndIf
 
-		ElseIf cTpFrete == "C" .AND. nCFrete = 0
+		ElseIf cTpFrete == "C" .AND. nCFrete == 0
 
 			IF ( xFilial(cTabCab) $ cMVFILFRT ) .AND. (!lCliVinc) .AND. !(lCliFEsp) .AND. cTpFrete <> 'F'
 
