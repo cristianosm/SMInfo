@@ -3,4 +3,8 @@
 
 user function EICDIADICAO_RDM()
 	
+
+teste := 0
+
+
 return
