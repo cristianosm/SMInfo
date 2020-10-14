@@ -57,10 +57,10 @@ User Function GlayMon()// Ferramenta para Desenvolver Relatorio Grafico
 	Private aValDef := { "L", "0000", "0000", "0000", "0000", "PT", "00", SPACE(250), "N" }
 	Private oPrn := Nil
 
-	If DATE() > cTod(_EXPIRA)
-		Iw_MsgBox("Desculpe. Verão Expirada !!! Entre em contato com cristianosm@gmail.com","Atenção","ALERT")
-		Return()
-	EndIf
+	//If DATE() > cTod(_EXPIRA)
+	//	Iw_MsgBox("Desculpe. Verão Expirada !!! Entre em contato com cristianosm@gmail.com","Atenção","ALERT")
+	//	Return()
+	//EndIf
 
 	//| Menu Tela Principal....
 	TelaPrincipal()
@@ -510,10 +510,10 @@ Static Function FWindows(oDlg, cCaption, nBottom, nRight, lTransparent) //| Mont
 	Default cCaption := "Dialogo"
 	Default lTransparent := .F.
 
-	WS_POPUP := 2147483648 //| [ 1 0 0 0 ]
-	WS_A := 1073741824 //| [ 0 1 0 0 ]
-	WS_B := 536870912 //| [ 0 0 1 0 ]
-	WS_VISIBLE := 268435456 //| [ 0 0 0 1 ]
+	//WS_POPUP := 2147483648 //| [ 1 0 0 0 ]
+	//WS_A := 1073741824 //| [ 0 1 0 0 ]
+	//WS_B := 536870912 //| [ 0 0 1 0 ]
+	//WS_VISIBLE := 268435456 //| [ 0 0 0 1 ]
 
 	nOpcW := Nil
 
